@@ -243,6 +243,137 @@
       padding: 3px 8px;
       border-radius: 999px;
     }
+
+    /* Clickable media + keyboard focus affordance */
+    .media { cursor: pointer; }
+    .media:focus-visible {
+      outline: 3px solid var(--blue-600);
+      outline-offset: 3px;
+    }
+
+    /* ── Video play affordance (badge + centered play button) ─────────── */
+    .video-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(37, 99, 235, 0.82);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      padding: 3px 9px 3px 7px;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+    .video-badge svg { width: 9px; height: 9px; flex: none; }
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(31,41,51,0) 40%, rgba(31,41,51,0.28) 100%);
+      transition: background 200ms ease;
+    }
+    .play-disc {
+      width: 60px;
+      height: 60px;
+      border-radius: 999px;
+      background: rgba(31, 41, 51, 0.55);
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(31, 41, 51, 0.35);
+      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), background 200ms ease;
+    }
+    .play-disc svg { width: 22px; height: 22px; margin-left: 3px; }
+    .tile:hover .play-disc,
+    .media:focus-visible .play-disc {
+      transform: scale(1.08);
+      background: var(--blue-600);
+    }
+    .tile:hover .play-overlay,
+    .media:focus-visible .play-overlay {
+      background: linear-gradient(to bottom, rgba(31,41,51,0) 30%, rgba(31,41,51,0.40) 100%);
+    }
+
+    /* ── Lightbox ─────────────────────────────────────────────────────── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 4vh 4vw;
+      background: rgba(15, 20, 26, 0.92);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+    .lightbox.open {
+      display: flex;
+      opacity: 1;
+    }
+    .lightbox-stage {
+      position: relative;
+      max-width: 92vw;
+      max-height: 92vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-stage img,
+    .lightbox-stage video {
+      max-width: 90vw;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+      background: #000;
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(31, 41, 51, 0.6);
+      color: #fff;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+    }
+    .lightbox-close:hover {
+      background: var(--blue-600);
+      border-color: var(--blue-600);
+      transform: scale(1.05);
+    }
+    .lightbox-close:focus-visible {
+      outline: 3px solid var(--blue-600);
+      outline-offset: 3px;
+    }
+    .lightbox-close svg { width: 18px; height: 18px; }
+    body.lb-lock { overflow: hidden; }
     figcaption {
       padding: 15px 17px 18px;
       display: flex;
@@ -535,6 +666,16 @@
     </div>
   </footer>
 
+  <!-- ── LIGHTBOX ─────────────────────────────────────────────────────── -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Media viewer" aria-hidden="true">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close viewer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <line x1="5" y1="5" x2="19" y2="19" /><line x1="19" y1="5" x2="5" y2="19" />
+      </svg>
+    </button>
+    <div class="lightbox-stage" id="lightbox-stage"></div>
+  </div>
+
   <script>
     // ── Curated assets (embedded; media on media.poppmedia.agency CDN) ──
     var GALLERY = [
@@ -567,23 +708,47 @@
       return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    // Play affordance shown over video tiles: a clear "VIDEO" pill +
+    // a centered play disc, so it's obvious the tile is playable.
+    var PLAY_BADGE =
+      '<span class="video-badge">' +
+        '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>' +
+        'Video' +
+      '</span>';
+    var PLAY_OVERLAY =
+      '<div class="play-overlay" aria-hidden="true">' +
+        '<span class="play-disc">' +
+          '<svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>' +
+        '</span>' +
+      '</div>';
+
     function tileHTML(item) {
       var classes = 'tile';
       if (item.aspect === 'portrait') classes += ' portrait';
       if (item.aspect === 'square') classes += ' square';
+      var isVideo = item.kind === 'video';
       var mediaInner;
-      if (item.kind === 'video') {
+      if (isVideo) {
+        // Muted autoplay loop stays as the moving thumbnail; the play
+        // affordance signals it opens in a sound-on lightbox on click.
         mediaInner =
           '<video src="' + esc(item.src) + '" muted loop autoplay playsinline preload="metadata"></video>' +
-          '<span class="badge">Video</span>';
+          PLAY_OVERLAY + PLAY_BADGE;
       } else {
         mediaInner =
           '<img src="' + esc(item.src) + '" alt="' + esc(item.title) + '" loading="lazy" decoding="async" />';
       }
+      var label = (isVideo ? 'Play video' : 'View image') + ': ' + item.title;
+      var dataAttrs =
+        'data-kind="' + esc(item.kind) + '" ' +
+        'data-src="' + esc(item.src) + '" ' +
+        'data-title="' + esc(item.title) + '"';
       var toolsHTML = item.tools.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
       return (
         '<figure class="' + classes + '">' +
-          '<div class="media">' + mediaInner + '</div>' +
+          '<div class="media" role="button" tabindex="0" aria-label="' + esc(label) + '" ' + dataAttrs + '>' +
+            mediaInner +
+          '</div>' +
           '<figcaption>' +
             '<h3>' + esc(item.title) + '</h3>' +
             '<p>' + esc(item.caption) + '</p>' +
@@ -611,6 +776,100 @@
     document.getElementById('featured-grid').innerHTML = featured.map(tileHTML).join('');
     document.getElementById('gallery-grid').innerHTML = rest.map(tileHTML).join('');
     document.getElementById('caps-grid').innerHTML = CAPABILITIES.map(capHTML).join('');
+
+    // ── Lightbox ─────────────────────────────────────────────────────
+    // Click / Enter / Space on any tile opens a fullscreen overlay.
+    // Images show contained at full size; videos play with native
+    // controls, sound on, autoplay, looping. Close on X, backdrop, Esc.
+    // Only one media plays at a time; the source is torn down on close.
+    (function () {
+      var lb = document.getElementById('lightbox');
+      var stage = document.getElementById('lightbox-stage');
+      var closeBtn = document.getElementById('lightbox-close');
+      var lastFocus = null;
+
+      function teardownMedia() {
+        var vid = stage.querySelector('video');
+        if (vid) {
+          try { vid.pause(); } catch (e) {}
+          vid.removeAttribute('src');
+          try { vid.load(); } catch (e) {}
+        }
+        stage.innerHTML = '';
+      }
+
+      function openLightbox(kind, src, title) {
+        teardownMedia();
+        if (kind === 'video') {
+          var v = document.createElement('video');
+          v.src = src;
+          v.controls = true;
+          v.autoplay = true;
+          v.loop = true;
+          v.playsInline = true;
+          v.setAttribute('playsinline', '');
+          v.preload = 'auto';
+          v.setAttribute('aria-label', title);
+          stage.appendChild(v);
+          // Sound on; play() may need a tick after insertion.
+          v.muted = false;
+          var p = v.play();
+          if (p && typeof p.catch === 'function') { p.catch(function () {}); }
+        } else {
+          var img = document.createElement('img');
+          img.src = src;
+          img.alt = title;
+          stage.appendChild(img);
+        }
+        lb.classList.add('open');
+        lb.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lb-lock');
+        closeBtn.focus();
+      }
+
+      function closeLightbox() {
+        if (!lb.classList.contains('open')) return;
+        lb.classList.remove('open');
+        lb.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lb-lock');
+        teardownMedia();
+        if (lastFocus && typeof lastFocus.focus === 'function') {
+          lastFocus.focus();
+        }
+        lastFocus = null;
+      }
+
+      function handleActivate(mediaEl) {
+        lastFocus = mediaEl;
+        openLightbox(
+          mediaEl.getAttribute('data-kind'),
+          mediaEl.getAttribute('data-src'),
+          mediaEl.getAttribute('data-title') || ''
+        );
+      }
+
+      // Event delegation across both grids.
+      document.addEventListener('click', function (e) {
+        var media = e.target.closest ? e.target.closest('.media[data-src]') : null;
+        if (media) { handleActivate(media); }
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeLightbox(); return; }
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          var active = document.activeElement;
+          if (active && active.classList && active.classList.contains('media') && active.hasAttribute('data-src')) {
+            e.preventDefault();
+            handleActivate(active);
+          }
+        }
+      });
+
+      // Close on X and on backdrop click (but not when clicking the media).
+      closeBtn.addEventListener('click', closeLightbox);
+      lb.addEventListener('click', function (e) {
+        if (e.target === lb || e.target === stage) { closeLightbox(); }
+      });
+    })();
   </script>
 </body>
 </html>
