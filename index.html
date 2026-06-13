@@ -14,7 +14,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Thomas Popp — AI Image &amp; Video Generation" />
   <meta property="og:description" content="Brand-aware AI imagery and video — prompt systems that ship finished, on-brand assets, not one-off renders." />
-  <meta property="og:image" content="https://media.poppmedia.agency/studio/jobs/0ce7d8f0-3090-4649-873f-d68511ad169c/0ce7d8f0-3090-4649-873f-d68511ad169c.png" />
+  <meta property="og:image" content="https://media.poppmedia.agency/studio/jobs/58972e75-dc9a-4df7-b438-96b62cf6f3cf/58972e75-dc9a-4df7-b438-96b62cf6f3cf.png" />
   <meta property="og:url" content="https://poppmediaagency.github.io/thomas-popp-portfolio/" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -417,14 +417,6 @@
       gap: 22px;
     }
 
-    /* Masonry-ish responsive gallery */
-    .masonry {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 22px;
-      align-items: start;
-    }
-
     /* ── Capabilities ─────────────────────────────────────────────────── */
     .cap-band {
       background: var(--ink-50);
@@ -618,19 +610,11 @@
     <div class="hero-rule" aria-hidden="true"></div>
   </header>
 
-  <!-- ── FEATURED ─────────────────────────────────────────────────────── -->
-  <section class="band">
-    <div class="band-inner">
-      <p class="section-eyebrow">Selected work</p>
-      <div class="feature-grid" id="featured-grid"></div>
-    </div>
-  </section>
-
-  <!-- ── GALLERY ──────────────────────────────────────────────────────── -->
+  <!-- ── SELECTED WORK ────────────────────────────────────────────────── -->
   <section class="band gallery-band">
     <div class="band-inner">
-      <p class="section-eyebrow">Gallery</p>
-      <div class="masonry" id="gallery-grid"></div>
+      <p class="section-eyebrow">Selected work</p>
+      <div class="feature-grid" id="gallery-grid"></div>
     </div>
   </section>
 
@@ -679,22 +663,10 @@
   <script>
     // ── Curated assets (embedded; media on media.poppmedia.agency CDN) ──
     var GALLERY = [
-      { kind: 'video', src: 'https://media.poppmedia.agency/studio/jobs/c5fbc1cc-eed0-4bde-a4ca-066fe0a28e05/runway-i2v-1781376883442-vertical.mp4', title: 'Pool Care — Image-to-Video Drift', caption: 'Directed a still pool-care image into a 9:16 motion clip — gentle pan-and-zoom drift with subtle ambient motion, photoreal 24fps film look, no warped people or text.', tools: ['Runway (image-to-video)', 'Nano Banana still'], aspect: 'portrait', feature: true },
-      { kind: 'video', src: 'https://media.poppmedia.agency/studio/deliverables/citywide-pools-la/commercial-001-citywide-pools-la-song.mp4', title: 'Citywide Pools — Branded Commercial', caption: 'End-to-end generated commercial: an AI image set animated to motion, cut to an original track, and composited with brand framing and end-card — a finished client deliverable.', tools: ['Runway', 'Image-to-Video', 'Suno', 'Brand composite'], aspect: 'landscape', feature: true },
-      { kind: 'video', src: 'https://media.poppmedia.agency/web-poster/campaigns/pm-tech/multi-cut/c6de2f2c-114a-4f47-bc75-d5bec09ce2a3/d058959e-shot0.mp4', title: 'PM Tech — Multi-Cut Spot', caption: 'Generated a multi-shot video spot from a beat-sheet: each beat prompted, rendered, and stitched into a continuous narrative cut for a paid social campaign.', tools: ['Runway (text-to-video)', 'Beat-sheet prompting', 'Multi-cut stitch'], aspect: 'landscape', feature: true },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/0ce7d8f0-3090-4649-873f-d68511ad169c/0ce7d8f0-3090-4649-873f-d68511ad169c.png', title: 'Pool Care — Editorial Still', caption: 'Brand-consistent editorial photography from a templated prompt system: "candid editorial photograph, sun-drenched Southern California backyard pool" — the same look across an entire image set.', tools: ['MidJourney', 'Prompt template system'], aspect: 'landscape', feature: true },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/e848034f-23b4-4d83-8701-068d3955f3a3/e848034f-23b4-4d83-8701-068d3955f3a3.png', title: 'Hidden Chemical Load — Concept Still', caption: 'A photoreal editorial image that concretely illustrates an abstract idea (dust adding a chemical load to a pool) — prompt-engineered to render a clear, on-topic concept, not a generic stock scene.', tools: ['Runway (Nano Banana)', 'Concept prompting'], aspect: 'landscape' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/48611221-d8af-40b3-8ad2-c2687715e775/48611221-d8af-40b3-8ad2-c2687715e775.webp', title: 'Weekly Brushing — 4:3 Editorial', caption: 'Aspect-targeted generation (4:3) tuned for a blog body slot, holding the brand’s editorial photographic style while changing subject matter per article section.', tools: ['Runway (Nano Banana)', 'Aspect-targeted prompts'], aspect: 'landscape' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/36230ebc-3562-4e36-b676-9064ba16fc5a/36230ebc-3562-4e36-b676-9064ba16fc5a-branded.png', title: 'Pool Service — Branded Hero', caption: 'A generated hero image taken through the brand-composite step — logo and treatment layered onto the AI render so the output ships as a finished, on-brand asset.', tools: ['MidJourney', 'Brand composite overlay'], aspect: 'landscape' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/58972e75-dc9a-4df7-b438-96b62cf6f3cf/58972e75-dc9a-4df7-b438-96b62cf6f3cf.png', title: 'Water Chemistry — Editorial Still', caption: 'Another frame from the same consistent visual library — proof the prompt system can produce dozens of distinct, on-topic images that still read as one coherent brand.', tools: ['MidJourney', 'Visual library system'], aspect: 'landscape' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/02c1f2a5-9c99-4997-b549-359c6f3a895d/02c1f2a5-9c99-4997-b549-359c6f3a895d.png', title: 'AI Model "Henry" — Studio Headshot', caption: 'Built a reusable AI spokesmodel with a locked identity: an authoritative 40s studio headshot, three-point lighting, neutral backdrop — the anchor frame for a face-consistent model.', tools: ['ChatGPT image', 'Identity-lock prompting'], aspect: 'portrait' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/de67ec2d-54bd-43ca-8f35-730e6e64eb66/de67ec2d-54bd-43ca-8f35-730e6e64eb66.png', title: 'AI Model "Henry" — Identity Hold', caption: 'Same face, new scene: an identity-lock prompt that preserves bone structure and skin tone across generations so one AI model can carry an entire campaign.', tools: ['ChatGPT image', 'Reference + identity-lock'], aspect: 'portrait' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/2193df55-b2b3-4cb8-88ea-390a62b0cd50/2193df55-b2b3-4cb8-88ea-390a62b0cd50.png', title: 'PoppDesk — 16:9 Editorial Banner', caption: 'A photoreal editorial commercial image framed 16:9 for a LinkedIn banner / X media card — one concept rendered across multiple platform aspect ratios from a single brief.', tools: ['ChatGPT image', 'Platform-aspect system'], aspect: 'landscape' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/3bedc3a1-bef4-4a22-b92e-d1d218a2b713/3bedc3a1-bef4-4a22-b92e-d1d218a2b713.png', title: 'PoppDesk — Editorial Brand Still', caption: 'A clean, on-brand editorial frame generated for feed and banner use — demonstrating tight art-direction control over lighting, composition, and mood via prompt alone.', tools: ['ChatGPT image', 'Art-direction prompting'], aspect: 'landscape' },
-      { kind: 'video', src: 'https://media.poppmedia.agency/studio/jobs/619df7db-bb90-41f4-867f-611ad6990bdf/mixed-hf.mp4', title: 'Faceless Reel — Auto-Assembled', caption: 'A faceless short-form reel assembled from generated stills with Ken-Burns motion and on-frame captions — built to publish at scale with zero per-clip render spend.', tools: ['Faceless reel engine', 'Ken Burns', 'Caption burn-in'], aspect: 'portrait' },
-      { kind: 'video', src: 'https://media.poppmedia.agency/studio/jobs/fb40365d-e792-40e7-b533-4fc81e9757a6/fb40365d-e792-40e7-b533-4fc81e9757a6-v0.mp4', title: 'Stormy Interior — Motion Tilt', caption: 'Image-to-video with a directed camera move: a slow upward tilt revealing a warm glowing interior against a dark sky, with volumetric god-rays — motion prompting for a cinematic feel.', tools: ['Runway (image-to-video)', 'Motion prompting'], aspect: 'landscape' },
-      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/carousel-How-Alcohol-Food-and-Trash-Affect-Pool-Cleanliness-2026-06-0-0-c15369765eb3d6c9/slide-c15369765eb3d6c9.png', title: 'Social Carousel — Generated Slide', caption: 'A square carousel slide generated and laid out as part of a multi-slide social pack — one blog fans out into platform-native carousels, stories, and posts automatically.', tools: ['MidJourney', 'Carousel layout system'], aspect: 'square' },
-      { kind: 'video', src: 'https://media.poppmedia.agency/reel-test/reel-final-e307b211.mp4', title: 'Waterfalls — Stitched Reel', caption: 'Multiple generated motion clips stitched into a single finished reel — testing the assembly pipeline that turns a batch of renders into one continuous, publish-ready video.', tools: ['Runway', 'Reel stitch pipeline'], aspect: 'portrait' }
+      { kind: 'video', src: 'https://media.poppmedia.agency/studio/jobs/c5fbc1cc-eed0-4bde-a4ca-066fe0a28e05/runway-i2v-1781376883442-vertical.mp4', title: 'Pool Care — Image-to-Video Drift', caption: 'Directed a still pool-care image into a 9:16 motion clip — gentle pan-and-zoom drift with subtle ambient motion, photoreal 24fps film look, no warped people or text.', tools: ['Runway (image-to-video)', 'Nano Banana still'], aspect: 'portrait' },
+      { kind: 'video', src: 'https://media.poppmedia.agency/studio/deliverables/citywide-pools-la/commercial-001-citywide-pools-la-song.mp4', title: 'Citywide Pools — Branded Commercial', caption: 'End-to-end generated commercial: an AI image set animated to motion, cut to an original track, and composited with brand framing and end-card — a finished client deliverable.', tools: ['Runway', 'Image-to-Video', 'Suno', 'Brand composite'], aspect: 'landscape' },
+      { kind: 'video', src: 'https://media.poppmedia.agency/web-poster/campaigns/pm-tech/multi-cut/c6de2f2c-114a-4f47-bc75-d5bec09ce2a3/d058959e-shot0.mp4', title: 'PM Tech — Multi-Cut Spot', caption: 'Generated a multi-shot video spot from a beat-sheet: each beat prompted, rendered, and stitched into a continuous narrative cut for a paid social campaign.', tools: ['Runway (text-to-video)', 'Beat-sheet prompting', 'Multi-cut stitch'], aspect: 'landscape' },
+      { kind: 'image', src: 'https://media.poppmedia.agency/studio/jobs/58972e75-dc9a-4df7-b438-96b62cf6f3cf/58972e75-dc9a-4df7-b438-96b62cf6f3cf.png', title: 'Water Chemistry — Editorial Still', caption: 'Another frame from the same consistent visual library — proof the prompt system can produce dozens of distinct, on-topic images that still read as one coherent brand.', tools: ['MidJourney', 'Visual library system'], aspect: 'landscape' }
     ];
 
     var CAPABILITIES = [
@@ -770,11 +742,7 @@
       );
     }
 
-    var featured = GALLERY.filter(function (g) { return g.feature; });
-    var rest = GALLERY.filter(function (g) { return !g.feature; });
-
-    document.getElementById('featured-grid').innerHTML = featured.map(tileHTML).join('');
-    document.getElementById('gallery-grid').innerHTML = rest.map(tileHTML).join('');
+    document.getElementById('gallery-grid').innerHTML = GALLERY.map(tileHTML).join('');
     document.getElementById('caps-grid').innerHTML = CAPABILITIES.map(capHTML).join('');
 
     // ── Lightbox ─────────────────────────────────────────────────────
